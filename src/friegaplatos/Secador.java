@@ -10,7 +10,7 @@ public class Secador implements Runnable {
     Random rnd=new Random();
     String role;
 
-    public Secador(Bandeja bandejaSeca, Bandeja bandejaMojada) {
+    public Secador(Bandeja bandejaMojada, Bandeja bandejaSeca) {
         this.bandejaSeca=bandejaSeca;
         this.bandejaMojada=bandejaMojada;
         role="Secador";

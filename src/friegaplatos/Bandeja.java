@@ -12,7 +12,6 @@ public class Bandeja {
     ArrayList<Plato> platosEnBandeja = new ArrayList();
 
     Lock reLock = new ReentrantLock();
-    Condition noLleno = reLock.newCondition();
     Condition noVacio = reLock.newCondition();
 
     public Bandeja(int nPlatos) {
@@ -22,18 +21,9 @@ public class Bandeja {
     }
 
     public void meterPlato(Plato plato, String role) throws InterruptedException {
+        platosEnBandeja.add(plato);
+        System.out.println(LocalTime.now() + " -- " + role + " put the dish numbered with the serial: " + plato.getSerial());
 
-        try {
-            while (platosEnBandeja.size()>10){
-                System.out.println(LocalTime.now() + " -- " + " Please, " + role + " wait, there are no dishes");
-                noLleno.await();
-            }
-            platosEnBandeja.add(plato);
-            System.out.println(LocalTime.now() + " -- " + role + " put the dish numbered with the serial: " + plato.getSerial());
-            noLleno.signal();
-        } finally {
-            reLock.unlock();
-        }
     }
 
     public Plato sacarPlato(String role) throws InterruptedException {
@@ -42,7 +32,7 @@ public class Bandeja {
 
         try {
             while (platosEnBandeja.isEmpty()) {
-                System.out.println(LocalTime.now() + " -- " + " Please, " + role + " there's no capacity for more dishes");
+                System.out.println(LocalTime.now() + " -- " + " Please, " + role + " there are no dishes :/");
                 noVacio.await();
             }
             plato=platosEnBandeja.remove(0);
